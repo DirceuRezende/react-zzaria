@@ -1,20 +1,79 @@
-import React from 'react'
+/* eslint-disable react/jsx-handler-names */
+import React, { PureComponent } from 'react'
+import styled from 'styled-components'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 import { Button, Grid } from '@material-ui/core'
 import { ReactComponent as MainLogo } from './logo-react-zzaria.svg'
-import styled from 'styled-components'
 
-const Login = () => (
-  <Container>
-    <Grid container justify='center' spacing={5}>
-      <Grid item>
-        <Logo />
-      </Grid>
-      <Grid item xs={12} container justify='center'>
-        <GitHubButton>Entrar com Github</GitHubButton>
-      </Grid>
-    </Grid>
-  </Container>
-)
+const firebaseConfig = {
+  apiKey: 'AIzaSyCQwM7pmSN8sVeGRtdEeLb_6miKxaHRQKA',
+  authDomain: 'reactzzaria-f7f87.firebaseapp.com',
+  projectId: 'reactzzaria-f7f87',
+  storageBucket: 'reactzzaria-f7f87.appspot.com',
+  messagingSenderId: '868530884207',
+  appId: '1:868530884207:web:eae04c5a8851804f43c79a',
+  measurementId: 'G-5XRMY3R3CC'
+}
+
+firebase.initializeApp(firebaseConfig)
+
+class Login extends PureComponent {
+  state = {
+    isUserLoggedIn: false,
+    user: null
+  }
+
+  componentDidMount () {
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user)
+      this.setState({
+        isUserLoggedIn: !!user,
+        user
+      })
+    })
+  }
+
+  login () {
+    const provider = new firebase.auth.GithubAuthProvider()
+    firebase.auth().signInWithRedirect(provider)
+  }
+
+  logout = () => {
+    firebase.auth().signOut().then(() => {
+      console.log('deslogou')
+      this.setState({
+        isUserLoggedIn: false,
+        user: null
+      })
+    })
+  }
+
+  render () {
+    const { isUserLoggedIn, user } = this.state
+    return (
+      <Container>
+        <Grid container justify='center' spacing={5}>
+          <Grid item>
+            <Logo />
+          </Grid>
+          <Grid item xs={12} container justify='center'>
+            {isUserLoggedIn && (
+              <>
+                <pre>{user.uid}</pre>
+                <Button variant='contained' onClick={this.logout}>Sair</Button>
+              </>
+            )}
+            {!isUserLoggedIn && (
+              <GitHubButton onClick={this.login}>Entrar com Github
+              </GitHubButton>
+            )}
+          </Grid>
+        </Grid>
+      </Container>
+    )
+  }
+}
 
 const Logo = styled(MainLogo)`
   width: 100%;

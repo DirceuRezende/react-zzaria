@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-handler-names */
-import React, { useContext } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Button, Grid } from '@material-ui/core'
 import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
-import { AuthContext } from 'contexts/auth'
+import { useAuth } from 'hooks'
 
 const Login = () => {
-  const { login } = useContext(AuthContext)
+  const { login } = useAuth()
 
   return (
     <Container>
@@ -28,7 +28,7 @@ const Logo = styled(MainLogo)`
 `
 
 const Container = styled.div`
-  padding: 20px;
+  padding: ${({ theme }) => theme.spacing(3)}px;
 `
 
 const GitHubButton = styled(Button).attrs({
@@ -36,9 +36,9 @@ const GitHubButton = styled(Button).attrs({
   fullWidth: true
 })`
   && {
-    font-size: 25px;
+    font-size: ${({ theme }) => theme.typography.h5.fontSize};
     max-width: 480px;
-    padding: 15px;
+    padding: ${({ theme }) => theme.spacing(2)}px;
     text-transform: none;
   }
 `

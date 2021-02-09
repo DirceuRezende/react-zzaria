@@ -1,13 +1,13 @@
 import React, { Suspense } from 'react'
 import { Switch, Route } from 'react-router-dom'
-import styled from 'styled-components'
 import { withStyles } from '@material-ui/core'
 import Header from './header'
 
-import { HOME, CHOOSE_PIZZA_FLAVOURS } from 'routes'
+import * as routes from 'routes'
 
 const ChoosePizzaSize = React.lazy(() => import('pages/choose-pizza-size'))
 const ChoosePizzaFlavours = React.lazy(() => import('pages/choose-pizza-flavours'))
+const ChoosePizzaQuantity = React.lazy(() => import('pages/choose-pizza-quantity'))
 
 const Main = () => (
   <>
@@ -15,28 +15,26 @@ const Main = () => (
 
     <Spacer />
 
-    <Content>
-      <Suspense fallback={<h1>Carregando...</h1>}>
-        <Switch>
-          <Route
-            path={HOME}
-            exact
-            component={ChoosePizzaSize}
-          />
-          <Route
-            path={CHOOSE_PIZZA_FLAVOURS}
-            component={ChoosePizzaFlavours}
-          />
-        </Switch>
-      </Suspense>
-    </Content>
+    <Suspense fallback={<h1>Carregando...</h1>}>
+      <Switch>
+        <Route
+          path={routes.HOME}
+          exact
+          component={ChoosePizzaSize}
+        />
+        <Route
+          path={routes.CHOOSE_PIZZA_FLAVOURS}
+          component={ChoosePizzaFlavours}
+        />
+        <Route
+          path={routes.CHOOSE_PIZZA_QUANTITY}
+          component={ChoosePizzaQuantity}
+        />
+      </Switch>
+    </Suspense>
 
   </>
 )
-
-const Content = styled.main`
-  padding: 20px;
-`
 
 const style = (theme) => ({
   main: theme.mixins.toolbar

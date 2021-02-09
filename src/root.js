@@ -1,6 +1,6 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { CssBaseline, createMuiTheme, MuiThemeProvider } from '@material-ui/core'
 import AuthProvider from 'contexts/auth'
@@ -17,6 +17,7 @@ const Root = () => (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <CssBaseline />
+        <GlobalStyle />
         <BrowserRouter>
           <Route component={App} />
         </BrowserRouter>
@@ -24,5 +25,13 @@ const Root = () => (
     </ThemeProvider>
   </MuiThemeProvider>
 )
+
+const GlobalStyle = createGlobalStyle`
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+`
 
 export default hot(module)(Root)

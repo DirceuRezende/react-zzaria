@@ -1,21 +1,21 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {
   Card,
   Grid,
   Typography
 } from '@material-ui/core'
-import { AuthContext } from 'contexts/auth'
+import { useAuth } from 'hooks'
 import pizzaSizes from 'fake-data/pizza-size'
 import { singularOrPlural } from 'utils'
 import { CHOOSE_PIZZA_FLAVOURS } from 'routes'
-import { CardLink, Divider, H3, H4, HeaderContent, PizzasGrid } from 'ui'
+import { CardLink, Content, Divider, H3, H4, HeaderContent, PizzasGrid } from 'ui'
 
 const ChoosePizzaSize = () => {
-  const { userInfo } = useContext(AuthContext)
+  const { userInfo } = useAuth()
 
   return (
-    <>
+    <Content>
       <HeaderContent>
         <H3>
           O que vai ser hoje, {userInfo.user.firstName}? =)
@@ -50,14 +50,14 @@ const ChoosePizzaSize = () => {
           </Grid>
         ))}
       </PizzasGrid>
-    </>
+    </Content>
   )
 }
 
 const Pizza = styled.div`
   align-items: center;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: ${({ theme }) => theme.palette.common.white};
+  border: 1px solid ${({ theme }) => theme.palette.grey.A100};
   border-radius: 50%;
   display: flex;
   height: 200px;
@@ -68,7 +68,7 @@ const Pizza = styled.div`
 
   &::before,
   &::after {
-    background: #ccc;
+    background: ${({ theme }) => theme.palette.grey.A100};
     content: '';
     position: absolute;
     transform: rotate(45deg);
@@ -88,15 +88,17 @@ const Pizza = styled.div`
 const PizzaText = styled(Typography).attrs({
   variant: 'h5'
 })`
-  align-items: center;
-  background: #fff;
-  border-radius: 50%;
-  display: flex;
-  height: 80px;
-  justify-content: center;
-  position: relative;
-  width: 80px;
-  z-index: 1;
+  && {
+    align-items: center;
+    background: ${({ theme }) => theme.palette.common.white};
+    border-radius: 50%;
+    display: flex;
+    height: 80px;
+    justify-content: center;
+    position: relative;
+    width: 80px;
+    z-index: 1;
+  }
 `
 
 export default ChoosePizzaSize

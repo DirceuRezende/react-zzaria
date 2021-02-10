@@ -31,7 +31,7 @@ const ChoosePizzaSize = () => {
           <Grid item key={pizza.id} xs>
             <Card>
               <CardLink
-                to={{ pathname: CHOOSE_PIZZA_FLAVOURS, state: pizza }}
+                to={{ pathname: CHOOSE_PIZZA_FLAVOURS, state: { pizzaSize: pizza } }}
               >
                 <Pizza>
                   <PizzaText>{pizza.size}cm</PizzaText>

@@ -6,7 +6,7 @@ import { Button as MaterialButton, Container, Grid, Typography } from '@material
 import { singularOrPlural } from 'utils'
 import { useAuth } from 'hooks'
 
-const Footer = ({ buttons, location }) => {
+const Footer = ({ buttons, history, location }) => {
   const { userInfo } = useAuth()
 
   const { pizzaSize, pizzaFlavours } = location.state
@@ -31,11 +31,22 @@ const Footer = ({ buttons, location }) => {
               </Typography>
             )}
           </OrderContainer>
-          <Grid item>
-            {buttons.map((button) => (
-              <Button key={button.to} {...button} />
-            ))}
-          </Grid>
+          <ButtonsContainer>
+            <Button
+              component='a'
+              {...buttons.back}
+              onClick={(e) => {
+                e.preventDefault()
+                history.goBack()
+              }}
+            />
+
+            <Button
+              {...buttons.action}
+              component={Link}
+              color='primary'
+            />
+          </ButtonsContainer>
         </Grid>
       </Container>
     </FooterContent>
@@ -43,7 +54,8 @@ const Footer = ({ buttons, location }) => {
 }
 
 Footer.propTypes = {
-  buttons: t.array.isRequired,
+  buttons: t.object.isRequired,
+  history: t.object.isRequired,
   location: t.object.isRequired
 }
 
@@ -61,9 +73,17 @@ const OrderContainer = styled(Grid).attrs({
   }
 `
 
+const ButtonsContainer = styled(Grid).attrs({
+  item: true
+})`
+  && {
+    align-items: center;
+    display: flex;
+  }
+`
+
 const Button = styled(MaterialButton).attrs({
-  variant: 'contained',
-  component: Link
+  variant: 'contained'
 })`
   margin-left: ${({ theme }) => theme.spacing(2)}px;
 `

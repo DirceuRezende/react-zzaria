@@ -64,17 +64,16 @@ const ChoosePizzaFlavours = ({ location }) => {
           ))}
         </PizzasGrid>
       </Content>
-      <Footer buttons={[
-        {
-          to: HOME,
+      <Footer buttons={{
+        back: {
           children: 'Mudar tamanho'
         },
-        {
+        action: {
           to: { pathname: CHOOSE_PIZZA_QUANTITY, state: { ...location.state, pizzaFlavours: getFlavoursNameAndId(checkboxes) } },
           children: 'Quantas Pizza?',
-          color: 'primary'
+          disabled: checkboxesChecked(checkboxes).length === 0
         }
-      ]}
+      }}
       />
     </>
   )

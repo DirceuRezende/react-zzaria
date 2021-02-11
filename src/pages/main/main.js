@@ -30,6 +30,10 @@ const Main = () => (
           path={routes.CHOOSE_PIZZA_QUANTITY}
           component={ChoosePizzaQuantity}
         />
+        <Route
+          path={routes.CHOOSE_PIZZA_QUANTITY}
+          component={ChoosePizzaQuantity}
+        />
       </Switch>
     </Suspense>
 

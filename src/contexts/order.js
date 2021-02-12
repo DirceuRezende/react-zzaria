@@ -6,6 +6,8 @@ const OrderContext = createContext()
 const OrderProvider = ({ children }) => {
   const [pizzas, addPizza] = useState([])
   function addPizzaToOrder (pizza) {
+    console.log(pizza)
+    console.log(pizzas)
     addPizza((pizzas) => pizzas.concat(pizza))
   }
   return (

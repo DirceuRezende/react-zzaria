@@ -28,9 +28,10 @@ const ChoosePizzaQuantity = ({ location }) => {
   }
 
   function addPizza () {
+    /* size: location.state.pizzaSize.id,
+    flavours: location.state.pizzaFlavours.map(flavour => flavour.id), */
     addPizzaToOrder({
-      size: location.state.pizzaSize.id,
-      flavours: location.state.pizzaFlavours.map(flavour => flavour.id),
+      ...location.state,
       quantity
     })
   }

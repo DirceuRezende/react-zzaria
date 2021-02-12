@@ -19,8 +19,7 @@ const Footer = ({ buttons, history, location }) => {
           <OrderContainer>
             <Typography><b>{userInfo.user.firstName}, seu pedido é:</b></Typography>
             <Typography>
-              Pizza <b>{name.toUpperCase()}</b>
-              {'- '}
+              Pizza <b>{name.toUpperCase()}</b> {'- '}
               ({slices} {singularOrPlural(slices, 'fatia', 'fatias')}, {' '}
               {flavours} {singularOrPlural(flavours, 'sabor', 'sabores')})
             </Typography>

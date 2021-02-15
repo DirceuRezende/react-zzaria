@@ -1,13 +1,20 @@
 import React from 'react'
-import t from 'prop-types'
 import styled from 'styled-components'
-import { Button, Grid, List, ListItem, Paper, TextField as MaterialTextField, Typography } from '@material-ui/core'
-import { Content, Footer, Title as UiTitle } from 'ui'
+import { Link, Redirect } from 'react-router-dom'
+import { Button, Grid, Paper } from '@material-ui/core'
+import { Content, OrderInfo, Title as UiTitle } from 'ui'
+import { CHECKOUT_CONFIRMATION, HOME } from 'routes'
+import FooterCheckout from './footer-checkout'
+import FormAddress from './form-address'
+import PhoneField from './phone-field'
 import { useOrder } from 'hooks'
-import { singularOrPlural } from 'utils'
 
 const Checkout = () => {
-  const { order } = useOrder()
+  const { order, addAddress, addPhone } = useOrder()
+
+  if (!order.pizzas.length) {
+    return <Redirect to={HOME} />
+  }
 
   return (
     <>
@@ -16,79 +23,30 @@ const Checkout = () => {
           <Grid item xs={12} md={6}>
             <Title>Qual o endereço para entrega?</Title>
             <PaperContainer>
-              <Grid container spacing={2}>
-                <TextField label='CEP' autoFocus xs={4} />
-                <Grid item xs={8} />
-                <TextField label='Rua' xs={9} />
-                <TextField label='Número' xs={3} />
-                <TextField label='Complemento' xs={12} />
-                <TextField label='Cidade' xs={9} />
-                <TextField label='Estado' xs={3} />
-              </Grid>
+              <FormAddress onUpdate={addAddress} />
             </PaperContainer>
 
             <Title>Qual o seu telefone?</Title>
             <PaperContainer>
-              <TextField label='Telefone' xs={4} />
+              <PhoneField onUpdate={addPhone} />
             </PaperContainer>
           </Grid>
 
           <Grid container item xs={12} md={6} direction='column'>
             <Title>Informações do seu pedido:</Title>
             <PaperContainer>
-              <List>
-                {order.pizzas.map((pizza, index) => {
-                  const { pizzaSize, pizzaFlavours, quantity } = pizza
-                  const { name, slices, flavours } = pizzaSize
-                  return (
-                    <ListItem key={index}>
-                      <Typography>
-                        <b>{quantity}</b> {' '}
-                        {singularOrPlural(quantity, 'pizza', 'pizzas')} {' '}
-                        <b>{name.toUpperCase()}</b> {'- '}
-                        ({slices} {singularOrPlural(slices, 'fatia', 'fatias')}, {' '}
-                        {flavours} {singularOrPlural(flavours, 'sabor', 'sabores')})
-
-                        <br />
-
-                        {singularOrPlural(pizzaFlavours.length, 'no sabor', 'nos sabores')}{' '}
-                        <b>{pizzaFlavours.map(({ name }) => name).join(', ')}</b>
-                      </Typography>
-                    </ListItem>
-                  )
-                })}
-              </List>
+              <OrderInfo showOptions />
             </PaperContainer>
           </Grid>
         </Grid>
       </Content>
-      <Footer>
-        <FooterContent>
-          <Button variant='contained' color='primary'>
-            Confirmar dados
-          </Button>
-        </FooterContent>
-      </Footer>
+      <FooterCheckout>
+        <Button variant='contained' component={Link} to={CHECKOUT_CONFIRMATION} color='primary'>
+          Confirmar pedido
+        </Button>
+      </FooterCheckout>
     </>
   )
-}
-
-const FooterContent = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
-
-function TextField ({ autoFocus, xs, ...props }) {
-  return (
-    <Grid item xs={xs}>
-      <MaterialTextField fullWidth variant='outlined' {...props} inputProps={{ autoFocus }} />
-    </Grid>
-  )
-}
-
-TextField.propTypes = {
-  autoFocus: t.bool,
-  xs: t.number
 }
 
 const Title = styled(UiTitle).attrs({

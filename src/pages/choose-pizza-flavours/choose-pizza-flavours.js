@@ -6,13 +6,20 @@ import { Card as MaterialCard, Grid, Typography } from '@material-ui/core'
 import { CardLink, Content, Divider, Footer, H4, HeaderContent, PizzasGrid } from 'ui'
 import { singularOrPlural, toMoney } from 'utils'
 import { HOME, CHOOSE_PIZZA_QUANTITY } from 'routes'
-
-import pizzasFlavours from 'fake-data/pizzas-flavours'
+import { useCollection } from 'hooks'
 
 const ChoosePizzaFlavours = ({ location }) => {
   const [checkboxes, setCheckboxes] = useState(() => ({}))
+  const pizzasFlavours = useCollection('pizzasFlavours')
 
-  console.log('checkboxes', checkboxes)
+  if (!pizzasFlavours) {
+    return 'Carregando sabores...'
+  }
+
+  if (!pizzasFlavours.length === 0) {
+    return 'Não há dados.'
+  }
+
   if (!location.state) {
     return <Redirect to={HOME} />
   }
@@ -69,7 +76,7 @@ const ChoosePizzaFlavours = ({ location }) => {
           children: 'Mudar tamanho'
         },
         action: {
-          to: { pathname: CHOOSE_PIZZA_QUANTITY, state: { ...location.state, pizzaFlavours: getFlavoursNameAndId(checkboxes) } },
+          to: { pathname: CHOOSE_PIZZA_QUANTITY, state: { ...location.state, pizzaFlavours: getFlavoursNameAndId({ checkboxes, pizzasFlavours }) } },
           children: 'Quantas Pizza?',
           disabled: checkboxesChecked(checkboxes).length === 0
         }
@@ -86,7 +93,7 @@ ChoosePizzaFlavours.propTypes = {
 const checkboxesChecked = (checkboxes) => {
   return Object.values(checkboxes).filter(Boolean)
 }
-function getFlavoursNameAndId (checkboxes) {
+function getFlavoursNameAndId ({ checkboxes, pizzasFlavours }) {
   return Object.entries(checkboxes)
     .filter(([_, value]) => !!value)
     .map(([id]) => ({

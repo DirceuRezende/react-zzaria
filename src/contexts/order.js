@@ -1,6 +1,8 @@
 import React, { createContext, useState } from 'react'
 import t from 'prop-types'
 import { v4 } from 'uuid'
+import firebase, { db } from 'services/firebase'
+import { useAuth } from 'hooks'
 
 const OrderContext = createContext()
 
@@ -9,7 +11,7 @@ const OrderProvider = ({ children }) => {
   const [orderInProgress, setOrderInProgress] = useState(false)
   const [address, addAddress] = useState({})
   const [phone, addPhone] = useState('')
-
+  const { userInfo } = useAuth()
   function addPizzaToOrder (pizza) {
     console.log(pizza)
     console.log(pizzas)
@@ -32,7 +34,23 @@ const OrderProvider = ({ children }) => {
     addPizza((pizzas) => pizzas.filter(p => p.id !== id))
   }
 
-  function sendOrder () {
+  async function sendOrder () {
+    try {
+      await db.collection('orders').add({
+        userId: userInfo.user.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        address,
+        phone,
+        pizzas: pizzas.map(pizza => ({
+          size: pizza.pizzaSize,
+          flavours: pizza.pizzaFlavours,
+          quantity: pizza.quantity
+        }))
+      })
+    } catch (e) {
+      console.log('erro ao salvar pedido:', e)
+    }
+
     setOrderInProgress(false)
   }
 

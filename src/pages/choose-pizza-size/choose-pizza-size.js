@@ -5,14 +5,22 @@ import {
   Grid,
   Typography
 } from '@material-ui/core'
-import { useAuth } from 'hooks'
-import pizzaSizes from 'fake-data/pizza-size'
+import { useAuth, useCollection } from 'hooks'
 import { singularOrPlural } from 'utils'
 import { CHOOSE_PIZZA_FLAVOURS } from 'routes'
 import { CardLink, Content, Divider, H3, H4, HeaderContent, PizzasGrid } from 'ui'
 
 const ChoosePizzaSize = () => {
   const { userInfo } = useAuth()
+  const pizzasSizes = useCollection('pizzasSizes')
+  console.log('pizzasSizes', pizzasSizes)
+  if (!pizzasSizes) {
+    return 'Carregando tamanhos...'
+  }
+
+  if (!pizzasSizes.length === 0) {
+    return 'Não há dados.'
+  }
 
   return (
     <Content>
@@ -27,7 +35,7 @@ const ChoosePizzaSize = () => {
       </HeaderContent>
 
       <PizzasGrid>
-        {pizzaSizes.map((pizza) => (
+        {pizzasSizes.map((pizza) => (
           <Grid item key={pizza.id} xs>
             <Card>
               <CardLink
